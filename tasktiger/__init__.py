@@ -309,7 +309,8 @@ class TaskTiger(object):
 
     def delay(self, func, args=None, kwargs=None, queue=None,
               hard_timeout=None, unique=None, lock=None, lock_key=None,
-              when=None, retry=None, retry_on=None, retry_method=None):
+              when=None, retry=None, retry_on=None, retry_method=None,
+              schedule=None):
         """
         Queues a task. See README.rst for an explanation of the options.
         """
@@ -317,7 +318,8 @@ class TaskTiger(object):
         task = Task(self, func, args=args, kwargs=kwargs, queue=queue,
                     hard_timeout=hard_timeout, unique=unique,
                     lock=lock, lock_key=lock_key,
-                    retry=retry, retry_on=retry_on, retry_method=retry_method)
+                    retry=retry, retry_on=retry_on, retry_method=retry_method,
+                    schedule=schedule)
 
         task.delay(when=when)
 

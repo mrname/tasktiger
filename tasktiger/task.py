@@ -58,7 +58,7 @@ class Task(object):
             retry_method = getattr(func, '_task_retry_method', None)
 
         if schedule is None:
-            self._task_schedule = getattr(func, '_task_schedule', None)
+            schedule = getattr(func, '_task_schedule', None)
 
         if unique:
             task_id = gen_unique_id(serialized_name, args, kwargs)
@@ -91,6 +91,9 @@ class Task(object):
             if retry_on:
                 task['retry_on'] = [serialize_func_name(cls)
                                     for cls in retry_on]
+
+        if schedule:
+            task['schedule'] = schedule
 
         self._data = task
 
