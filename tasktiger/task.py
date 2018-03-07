@@ -11,7 +11,7 @@ __all__ = ['Task']
 class Task(object):
     def __init__(self, tiger, func=None, args=None, kwargs=None, queue=None,
                  hard_timeout=None, unique=None, lock=None, lock_key=None,
-                 retry=None, retry_on=None, retry_method=None,
+                 retry=None, retry_on=None, retry_method=None, schedule=None,
 
                  # internal variables
                  _data=None, _state=None, _ts=None, _executions=None):
@@ -28,6 +28,7 @@ class Task(object):
         self._state = _state
         self._ts = _ts
         self._executions = _executions or []
+        self._task_schedule = schedule
 
         # Internal initialization based on raw data.
         if _data is not None:
@@ -55,6 +56,9 @@ class Task(object):
 
         if retry_method is None:
             retry_method = getattr(func, '_task_retry_method', None)
+
+        if schedule is None:
+            self._task_schedule = getattr(func, '_task_schedule', None)
 
         if unique:
             task_id = gen_unique_id(serialized_name, args, kwargs)
@@ -440,7 +444,7 @@ class Task(object):
 
     def _queue_for_next_period(self):
         now = datetime.datetime.utcnow()
-        schedule = self.func._task_schedule
+        schedule = self._task_schedule
         if callable(schedule):
             schedule_func = schedule
             schedule_args = ()
