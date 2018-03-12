@@ -934,6 +934,8 @@ class Worker(object):
             while True:
                 # Update the queue set on every iteration so we don't get stuck
                 # on processing a specific queue.
+                # Queue any periodic tasks that are not queued yet.
+                self._queue_periodic_tasks()
                 self._wait_for_new_tasks(timeout=self.config['SELECT_TIMEOUT'],
                             batch_timeout=self.config['SELECT_BATCH_TIMEOUT'])
 
