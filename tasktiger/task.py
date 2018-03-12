@@ -60,6 +60,9 @@ class Task(object):
         if schedule is None:
             self._task_schedule = getattr(func, '_task_schedule', None)
 
+        if schedule:
+            self.tiger.periodic_task_funcs[serialized_func] = func
+
         if unique:
             task_id = gen_unique_id(serialized_name, args, kwargs)
         else:
